@@ -27,10 +27,9 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 
 
+app.get("/url/:shortId", handleRedirectToURL);
 app.use("/url", restrictToLoggedInUser, urlRoute);
 app.use("/user", userRoute);
 app.use("/", checkAuthentication, staticRouter);
-
-app.get("/url/:shortId", handleRedirectToURL);
 
 app.listen(PORT, () => console.log(`Server started at PORT ${PORT}`))
