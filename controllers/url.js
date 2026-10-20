@@ -3,12 +3,26 @@ import URL from "../models/url.js";
 
 const ID_LENGTH = 8;
 
+function isValidHttpUrl(value) {
+    try {
+        const parsed = new globalThis.URL(value.trim());
+        return parsed.protocol === "https:" || parsed.protocol === "http:";
+    } catch {
+        return false;
+    }
+}
+
 async function handleGenerateNewShortURL(req, res) {
     const shortId = nanoid(ID_LENGTH);
     const body = req.body;
     if (!body.url) {
         return res.status(400).json({error: "URL is required"});
     }
+
+    if(!isValidHttpUrl(body.url)){
+        return res.status(400).json({error: "Enter a full URL starting with https://"});
+    }
+
     await URL.create({
         shortId: shortId,
         redirectUrl: body.url,
